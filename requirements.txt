@@ -1,7 +1,7 @@
 streamlit
 numpy
 pandas
-matplotlib
 scipy
-tensorflow
+statsmodels
+matplotlib
 scikit-learn
