@@ -1,0 +1,11 @@
+deep_hedging_app/
+├── app.py                     # Streamlit UI
+├── data_fetcher.py            # Download real stock prices
+├── option_pricer.py           # Black‑Scholes and Greeks
+├── portfolio.py               # Portfolio composition & valuation
+├── garch_copula.py            # GARCH + t‑copula simulator
+├── deep_hedging_model.py      # LSTM model & training
+├── backtester.py              # Rolling backtest engine
+├── evaluation.py              # Risk metrics & statistical tests
+├── utils.py                   # Helpers
+└── requirements.txt
