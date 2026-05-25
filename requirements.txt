@@ -5,3 +5,7 @@ scipy
 statsmodels
 matplotlib
 scikit-learn
+yfinance
+arch
+torch
+plotly
