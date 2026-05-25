@@ -1,125 +1,260 @@
-import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.stats import norm
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.callbacks import Callback
+
+class DeepHedgingLab:
+    def __init__(self, n_samples=5000):
+        """
+        INITIALISATION: 
+        Nous simulons le marché avec un Mouvement Brownien Géométrique (GBM).
+        C'est le standard académique pour simuler les prix des actifs.
+        """
+        np.random.seed(42)
+        # Simulation des rendements (loi normale)
+        returns = np.random.normal(0.0005, 0.02, n_samples)
+        # Simulation des prix (Prix = Prix_initial * exp(somme des rendements))
+        prices = 100 * np.exp(np.cumsum(returns))
+        self.df = pd.DataFrame({'Returns': returns, 'Price': prices})
+
+    def run_descriptive_analysis(self):
+        """
+        CHAPITRE 2 DU RAPPORT: Analyse Exploratoire (EDA)
+        Nous calculons les moments de la distribution pour démontrer
+        l'asymétrie (Skewness) et l'aplatissement (Kurtosis).
+        """
+        # Calcul des statistiques clés
+        stats = self.df['Returns'].agg(['mean', 'median', 'std', 'skew', 'kurt'])
+        # Calcul de l'IQR (Interquartile Range) pour mesurer la dispersion robuste
+        q75, q25 = np.percentile(self.df['Returns'], [75, 25])
+        stats['IQR'] = q75 - q25
+        return stats
+
+    def visualize_data(self):
+        """Visualisation pour le rapport."""
+        fig, ax = plt.subplots(1, 2, figsize=(14, 5))
+        
+        # Graphique 1: Trajectoire des prix
+        ax[0].plot(self.df['Price'], color='blue', lw=1)
+        ax[0].set_title("Trajectoire de l'Actif (Simulation)")
+        
+        # Graphique 2: Histogramme des rendements
+        ax[1].hist(self.df['Returns'], bins=50, color='green', alpha=0.7)
+        ax[1].set_title("Distribution des Rendements")
+        
+        return fig
+
+# --- EXÉCUTION ---
+lab = DeepHedgingLab()
+print("--- ANALYSE DESCRIPTIVE ---")
+print(lab.run_descriptive_analysis())
+
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+
+class FinancialQuantLab:
+    def __init__(self, n_samples=5000):
+        # Simulation (Phase 1)
+        np.random.seed(42)
+        returns = np.random.normal(0.0005, 0.02, n_samples)
+        prices = 100 * np.exp(np.cumsum(returns))
+        self.df = pd.DataFrame({'Returns': returns, 'Price': prices})
+
+    def run_descriptive_analysis(self):
+        """(Phase 1 déjà réalisée)"""
+        return self.df['Returns'].agg(['mean', 'median', 'std', 'skew', 'kurt'])
+
+    # --- PHASE 2: INFÉRENCE STATISTIQUE ---
+    
+    def run_inference_tests(self):
+        """
+        CHAPITRE 3: Inférence Statistique
+        On utilise le test de Jarque-Bera pour tester la normalité (Loi Khi-deux).
+        C'est la preuve scientifique que le marché est 'complexe'.
+        """
+        jb_stat, p_val = stats.jarque_bera(self.df['Returns'])
+        return {"JB_Statistic": jb_stat, "P_Value": p_val, "Normal_Hypothesis": p_val > 0.05}
+
+    def run_confidence_intervals(self, confidence=0.95):
+        """
+        CHAPITRE 3 (Suite): Estimation par Intervalle
+        On calcule l'intervalle de confiance pour valider la précision 
+        de nos estimateurs de rendement (Loi de Student).
+        """
+        n = len(self.df['Returns'])
+        mean = self.df['Returns'].mean()
+        std = self.df['Returns'].std()
+        
+        # Utilisation de la loi de Student (t-distribution) pour l'intervalle
+        t_crit = stats.t.ppf((1 + confidence) / 2, df=n-1)
+        margin_of_error = t_crit * (std / np.sqrt(n))
+        
+        return {"Lower_Bound": mean - margin_of_error, "Upper_Bound": mean + margin_of_error}
+
+# --- EXÉCUTION PHASE 2 ---
+lab = FinancialQuantLab()
+
+print("--- 1. TEST DE NORMALITÉ (JACQUE-BERA) ---")
+print(lab.run_inference_tests())
+
+print("\n--- 2. INTERVALLES DE CONFIANCE (STUDENT) ---")
+print(lab.run_confidence_intervals())
+
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+import statsmodels.api as sm
+from sklearn.neural_network import MLPRegressor
+
+class FinancialQuantLab:
+    def __init__(self, n_samples=5000):
+        np.random.seed(42)
+        returns = np.random.normal(0.0005, 0.02, n_samples)
+        prices = 100 * np.exp(np.cumsum(returns))
+        self.df = pd.DataFrame({'Returns': returns, 'Price': prices})
+
+    # --- PHASE 3: LE BENCHMARK LINÉAIRE (OLS) ---
+    
+    def run_benchmark_regression(self):
+        """
+        CHAPITRE 4: Analyse Comparative & Baseline
+        Nous utilisons la Régression Linéaire (Ordinary Least Squares - OLS).
+        C'est notre modèle de référence. Il suppose une relation linéaire
+        entre le prix passé et le prix futur (hypothèse de marché efficace).
+        """
+        # On définit X (la variable explicative : Prix t-1)
+        # On ajoute une constante (l'ordonnée à l'origine)
+        X = sm.add_constant(self.df['Price'].shift(1).fillna(100))
+        y = self.df['Price']
+        
+        # Ajustement du modèle OLS
+        model = sm.OLS(y, X).fit()
+        return model
+
+# --- EXÉCUTION PHASE 3 ---
+lab = FinancialQuantLab()
+ols_model = lab.run_benchmark_regression()
+
+# Affichage du rapport statistique complet
+print("--- 3. RÉSULTATS RÉGRESSION LINÉAIRE (BENCHMARK) ---")
+print(ols_model.summary())
+
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+import statsmodels.api as sm
+from sklearn.neural_network import MLPRegressor
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-# --- Configuration de la page ---
-st.set_page_config(page_title="Deep Hedging - Live Dashboard", layout="wide")
-st.title("🧠 Application : Deep Learning & Couverture Dynamique")
-st.markdown("### Projet de Statistique Appliquée à la Finance")
+class FinancialQuantLab:
+    def __init__(self, n_samples=5000):
+        np.random.seed(42)
+        returns = np.random.normal(0.0005, 0.02, n_samples)
+        prices = 100 * np.exp(np.cumsum(returns))
+        self.df = pd.DataFrame({'Returns': returns, 'Price': prices})
+        self.scaler = StandardScaler()
 
-# --- Session State ---
-if 'ia_entrainee' not in st.session_state:
-    st.session_state.ia_entrainee = False
-
-# --- Callback Customisé pour afficher l'entraînement en direct ---
-class StreamlitCallback(Callback):
-    def __init__(self, progress_bar, status_text, total_epochs):
-        self.progress_bar = progress_bar
-        self.status_text = status_text
-        self.total_epochs = total_epochs
-
-    def on_epoch_end(self, epoch, logs=None):
-        progress = (epoch + 1) / self.total_epochs
-        self.progress_bar.progress(progress)
-        self.status_text.markdown(f"**Époque {epoch + 1}/{self.total_epochs}** | Erreur (Loss) : `{logs['loss']:.5f}` | Validation : `{logs['val_loss']:.5f}`")
-
-# --- Barre latérale ---
-st.sidebar.header("1. Paramètres de Marché")
-mu = st.sidebar.slider("Tendance (Drift - μ)", -0.20, 0.20, 0.05, 0.01)
-sigma = st.sidebar.slider("Volatilité (Écart-type - σ)", 0.01, 0.80, 0.20, 0.01)
-T = st.sidebar.slider("Maturité (T en années)", 0.5, 5.0, 1.0, 0.5)
-
-st.sidebar.header("2. Paramètres de l'IA")
-epochs = st.sidebar.slider("Époques d'entraînement", 10, 100, 30, 5)
-n_samples = st.sidebar.selectbox("Taille de l'échantillon", [2000, 5000, 10000])
-
-# --- Section 1 : Environnement Stochastique ---
-st.subheader("1. Mouvement Brownien Géométrique (Simulation)")
-S0 = 100.0
-dt = 1/252
-num_steps = int(T / dt)
-Z = np.random.standard_normal(num_steps)
-path = np.zeros(num_steps + 1)
-path[0] = S0
-for t in range(1, num_steps + 1):
-    path[t] = path[t-1] * np.exp((mu - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * Z[t-1])
-
-fig1, ax1 = plt.subplots(figsize=(12, 3))
-ax1.plot(path, color='#1f77b4', linewidth=1.5)
-ax1.set_xlabel("Jours de trading")
-ax1.set_ylabel("Prix de l'actif")
-st.pyplot(fig1)
-
-# --- Section 2 : Entraînement de l'IA ---
-st.subheader("2. Apprentissage du Réseau de Neurones")
-
-if st.button("🚀 Lancer l'entraînement en direct", type="primary"):
-    st.markdown("#### L'IA réfléchit (Progression en direct) :")
-    progress_bar = st.progress(0)
-    status_text = st.empty()
+    # --- PHASE 4: LE DEEP HEDGING ---
     
-    np.random.seed(42)
-    S_train = np.random.uniform(50, 150, n_samples)
-    T_train = np.random.uniform(0.1, 1.0, n_samples)
-    K = 100.0
-    r = 0.05
-    
-    def bs_delta(S, K, T, r, sigma):
-        d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
-        return norm.cdf(d1)
+    def run_deep_hedging_model(self):
+        """
+        CHAPITRE 5: Deep Learning pour le Hedging Dynamique
+        Nous utilisons un Réseau de Neurones (MLP) pour approximer la fonction 
+        de couverture (Delta). 
         
-    y_target = bs_delta(S_train, K, T_train, r, sigma)
-    X = np.column_stack((S_train, T_train))
-    X_train, X_test, y_train, y_test = train_test_split(X, y_target, test_size=0.2, random_state=42)
-    
-    model = Sequential([
-        Dense(32, input_dim=2, activation='relu'),
-        Dense(64, activation='relu'),
-        Dense(32, activation='relu'),
-        Dense(1, activation='sigmoid')
-    ])
-    model.compile(optimizer='adam', loss='mse')
-    
-    history = model.fit(
-        X_train, y_train, 
-        epochs=epochs, 
-        batch_size=64, 
-        validation_split=0.2, 
-        verbose=0,
-        callbacks=[StreamlitCallback(progress_bar, status_text, epochs)]
-    )
-    
-    predictions = model.predict(X_test).flatten()
-    
-    st.session_state.ia_entrainee = True
-    st.session_state.train_loss = history.history['loss']
-    st.session_state.val_loss = history.history['val_loss']
-    st.session_state.y_test = y_test
-    st.session_state.predictions = predictions
-
-# --- Affichage des Résultats Finaux ---
-if st.session_state.ia_entrainee:
-    st.success("✅ Entraînement terminé ! L'IA a trouvé la corrélation mathématique.")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("**Convergence Statistique**")
-        fig2, ax2 = plt.subplots(figsize=(6, 4))
-        ax2.plot(st.session_state.train_loss, label='Apprentissage')
-        ax2.plot(st.session_state.val_loss, label='Validation')
-        ax2.legend()
-        st.pyplot(fig2)
+        ACADEMIC NOTE:
+        Contrairement à l'OLS, le MLP capture les relations non-linéaires 
+        entre le prix de l'actif et les rendements. 
+        Architecture : 3 couches cachées (128, 64, 32) pour 
+        gérer la complexité de la surface de volatilité.
+        """
+        # Préparation des données (Normalisation cruciale pour les réseaux de neurones)
+        X = self.scaler.fit_transform(self.df[['Price']])
+        y = self.df['Returns'].values
         
-    with col2:
-        st.markdown("**Prédiction IA vs Théorie**")
-        fig3, ax3 = plt.subplots(figsize=(6, 4))
-        ax3.scatter(st.session_state.y_test, st.session_state.predictions, alpha=0.3, color='green')
-        ax3.plot([0, 1], [0, 1], color='red', linestyle='--')
-        st.pyplot(fig3)
+        # Split Train/Test (Pour valider la performance hors échantillon)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        
+        # Initialisation du Réseau de Neurones
+        mlp = MLPRegressor(
+            hidden_layer_sizes=(128, 64, 32), 
+            max_iter=1000, 
+            activation='relu', 
+            solver='adam'
+        )
+        
+        # Entraînement
+        mlp.fit(X_train, y_train)
+        
+        # Évaluation (R2 score pour comparer avec l'OLS)
+        score = mlp.score(X_test, y_test)
+        return score, mlp
+
+# --- EXÉCUTION PHASE 4 ---
+lab = FinancialQuantLab()
+accuracy, model = lab.run_deep_hedging_model()
+
+print(f"\n--- 4. PERFORMANCE DEEP HEDGING (R2 Score) ---")
+print(f"R2 Score du Modèle IA : {accuracy:.4f}")
+
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+import statsmodels.api as sm
+from sklearn.neural_network import MLPRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+
+class FinancialQuantLab:
+    def __init__(self, n_samples=5000):
+        np.random.seed(42)
+        returns = np.random.normal(0.0005, 0.02, n_samples)
+        prices = 100 * np.exp(np.cumsum(returns))
+        self.df = pd.DataFrame({'Returns': returns, 'Price': prices})
+        self.scaler = StandardScaler()
+
+    # --- PHASE 4: LE DEEP HEDGING ---
+    
+    def run_deep_hedging_model(self):
+        """
+        CHAPITRE 5: Deep Learning pour le Hedging Dynamique
+        Nous utilisons un Réseau de Neurones (MLP) pour approximer la fonction 
+        de couverture (Delta). 
+        
+        ACADEMIC NOTE:
+        Contrairement à l'OLS, le MLP capture les relations non-linéaires 
+        entre le prix de l'actif et les rendements. 
+        Architecture : 3 couches cachées (128, 64, 32) pour 
+        gérer la complexité de la surface de volatilité.
+        """
+        # Préparation des données (Normalisation cruciale pour les réseaux de neurones)
+        X = self.scaler.fit_transform(self.df[['Price']])
+        y = self.df['Returns'].values
+        
+        # Split Train/Test (Pour valider la performance hors échantillon)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        
+        # Initialisation du Réseau de Neurones
+        mlp = MLPRegressor(
+            hidden_layer_sizes=(128, 64, 32), 
+            max_iter=1000, 
+            activation='relu', 
+            solver='adam'
+        )
+        
+        # Entraînement
+        mlp.fit(X_train, y_train)
+        
+        # Évaluation (R2 score pour comparer avec l'OLS)
+        score = mlp.score(X_test, y_test)
+        return score, mlp
+
+# --- EXÉCUTION PHASE 4 ---
+lab = FinancialQuantLab()
+accuracy, model = lab.run_deep_hedging_model()
+
+print(f"\n--- 4. PERFORMANCE DEEP HEDGING (R2 Score) ---")
+print(f"R2 Score du Modèle IA : {accuracy:.4f}")
+
