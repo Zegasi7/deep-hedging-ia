@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="vert_maroc">#006233</color>
+    <color name="vert_fonce">#004D28</color>
+    <color name="rouge_maroc">#C1272D</color>
+    <color name="fond_resultat">#F2F5F3</color>
+</resources>

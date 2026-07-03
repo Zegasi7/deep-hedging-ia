@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Compta Facture Maroc</string>
+
+    <string name="intro">Décrivez une facture : l\'application propose l\'écriture comptable selon le plan comptable marocain (CGNC) et signale les règles fiscales de la DGI (CGI).</string>
+
+    <string name="hint_description">Décrivez la facture (ex. : « facture d\'honoraires avocat 12 000 dh TTC payée par virement »)</string>
+    <string name="btn_analyser">Analyser la description</string>
+
+    <string name="label_sens">Type de facture</string>
+    <string name="label_categorie">Nature de l\'opération</string>
+    <string name="label_montant">Montant (DH)</string>
+    <string name="label_taux">Taux de TVA</string>
+    <string name="label_reglement">Mode de règlement</string>
+    <string name="label_tiers">Fournisseur / client (optionnel)</string>
+    <string name="label_num_facture">N° de facture (optionnel)</string>
+    <string name="radio_ht">Montant HT</string>
+    <string name="radio_ttc">Montant TTC</string>
+
+    <string name="btn_generer">Générer l\'écriture comptable</string>
+    <string name="btn_copier">Copier l\'écriture</string>
+    <string name="copie_ok">Écriture copiée dans le presse-papiers</string>
+
+    <string name="titre_ecriture">Écriture proposée</string>
+    <string name="titre_notes">Règles fiscales et remarques (DGI / CGI)</string>
+
+    <string name="err_montant">Saisissez un montant valide</string>
+    <string name="analyse_ok">Formulaire pré-rempli — vérifiez les champs</string>
+    <string name="analyse_vide">Décrivez d\'abord la facture dans la zone de texte</string>
+
+    <string name="sens_achat">Achat (facture fournisseur)</string>
+    <string name="sens_vente">Vente (facture client)</string>
+    <string name="reglement_credit">À crédit (non payée)</string>
+    <string name="reglement_especes">Espèces</string>
+    <string name="reglement_banque">Chèque / virement / carte</string>
+</resources>

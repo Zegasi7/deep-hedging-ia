@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ComptaFacture" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/vert_maroc</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#B7E4C7</item>
+        <item name="colorSecondary">@color/rouge_maroc</item>
+    </style>
+</resources>

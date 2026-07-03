@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Document -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,26 h28 l10,10 v46 a3,3 0 0 1 -3,3 h-35 a3,3 0 0 1 -3,-3 v-53 a3,3 0 0 1 3,-3 z" />
+    <!-- Coin plié -->
+    <path
+        android:fillColor="#CDE7D8"
+        android:pathData="M64,26 l10,10 h-10 z" />
+    <!-- Lignes d'écriture -->
+    <path
+        android:fillColor="#006233"
+        android:pathData="M40,46 h28 v3 h-28 z M40,54 h28 v3 h-28 z M40,62 h18 v3 h-18 z" />
+    <!-- Coche -->
+    <path
+        android:fillColor="#C1272D"
+        android:pathData="M60,66 l4,5 l8,-10 l3,2.5 l-11,13.5 l-7,-8 z" />
+</vector>

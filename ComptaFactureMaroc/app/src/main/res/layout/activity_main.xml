@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/intro"
+            android:textSize="14sp"
+            android:paddingBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_description"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minLines="2"
+            android:maxLines="5" />
+
+        <Button
+            android:id="@+id/btnAnalyser"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_analyser" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/label_sens"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spSens"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/label_categorie"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spCategorie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/label_montant"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etMontant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="0.00"
+            android:inputType="numberDecimal" />
+
+        <RadioGroup
+            android:id="@+id/rgBase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbHt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/radio_ht" />
+
+            <RadioButton
+                android:id="@+id/rbTtc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/radio_ttc" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/label_taux"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spTaux"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/label_reglement"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spReglement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etTiers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="@string/label_tiers"
+            android:inputType="textCapWords" />
+
+        <EditText
+            android:id="@+id/etNumFacture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/label_num_facture"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnGenerer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_generer" />
+
+        <TextView
+            android:id="@+id/tvTitreEcriture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/titre_ecriture"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <HorizontalScrollView
+            android:id="@+id/hsvResultat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/fond_resultat"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvResultat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:padding="12dp"
+                android:textColor="#1B1B1B"
+                android:textSize="12sp" />
+        </HorizontalScrollView>
+
+        <Button
+            android:id="@+id/btnCopier"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_copier"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvTitreNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/titre_notes"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingBottom="24dp"
+            android:textSize="13sp"
+            android:visibility="gone" />
+    </LinearLayout>
+</ScrollView>
